@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zheng.crawler.dao.mapper.CrawlerCarDetailsMapper">
+  <resultMap id="BaseResultMap" type="com.zheng.crawler.dao.model.CrawlerCarDetails">
+    <id column="car_details_id" jdbcType="INTEGER" property="carDetailsId" />
+    <result column="car_details_name" jdbcType="VARCHAR" property="carDetailsName" />
+    <result column="car_brand_id" jdbcType="INTEGER" property="carBrandId" />
+    <result column="car_type_id" jdbcType="INTEGER" property="carTypeId" />
+    <result column="manufactor" jdbcType="VARCHAR" property="manufactor" />
+    <result column="model_year" jdbcType="VARCHAR" property="modelYear" />
+    <result column="displacement" jdbcType="VARCHAR" property="displacement" />
+    <result column="transmission" jdbcType="VARCHAR" property="transmission" />
+    <result column="gear" jdbcType="VARCHAR" property="gear" />
+    <result column="transmission_model" jdbcType="VARCHAR" property="transmissionModel" />
+    <result column="capacity" jdbcType="VARCHAR" property="capacity" />
+    <result column="joint" jdbcType="VARCHAR" property="joint" />
+    <result column="creator" jdbcType="INTEGER" property="creator" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    car_details_id, car_details_name, car_brand_id, car_type_id, manufactor, model_year, 
+    displacement, transmission, gear, transmission_model, capacity, joint, creator, create_time
+  </sql>
+  <select id="selectByExample" parameterType="com.zheng.crawler.dao.model.CrawlerCarDetailsExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from crawler_car_details
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from crawler_car_details
+    where car_details_id = #{carDetailsId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from crawler_car_details
+    where car_details_id = #{carDetailsId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.zheng.crawler.dao.model.CrawlerCarDetailsExample">
+    delete from crawler_car_details
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.zheng.crawler.dao.model.CrawlerCarDetails">
+    <selectKey keyProperty="carDetailsId" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into crawler_car_details (car_details_name, car_brand_id, car_type_id, 
+      manufactor, model_year, displacement, 
+      transmission, gear, transmission_model, 
+      capacity, joint, creator, 
+      create_time)
+    values (#{carDetailsName,jdbcType=VARCHAR}, #{carBrandId,jdbcType=INTEGER}, #{carTypeId,jdbcType=INTEGER}, 
+      #{manufactor,jdbcType=VARCHAR}, #{modelYear,jdbcType=VARCHAR}, #{displacement,jdbcType=VARCHAR}, 
+      #{transmission,jdbcType=VARCHAR}, #{gear,jdbcType=VARCHAR}, #{transmissionModel,jdbcType=VARCHAR}, 
+      #{capacity,jdbcType=VARCHAR}, #{joint,jdbcType=VARCHAR}, #{creator,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zheng.crawler.dao.model.CrawlerCarDetails">
+    <selectKey keyProperty="carDetailsId" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into crawler_car_details
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="carDetailsName != null">
+        car_details_name,
+      </if>
+      <if test="carBrandId != null">
+        car_brand_id,
+      </if>
+      <if test="carTypeId != null">
+        car_type_id,
+      </if>
+      <if test="manufactor != null">
+        manufactor,
+      </if>
+      <if test="modelYear != null">
+        model_year,
+      </if>
+      <if test="displacement != null">
+        displacement,
+      </if>
+      <if test="transmission != null">
+        transmission,
+      </if>
+      <if test="gear != null">
+        gear,
+      </if>
+      <if test="transmissionModel != null">
+        transmission_model,
+      </if>
+      <if test="capacity != null">
+        capacity,
+      </if>
+      <if test="joint != null">
+        joint,
+      </if>
+      <if test="creator != null">
+        creator,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="carDetailsName != null">
+        #{carDetailsName,jdbcType=VARCHAR},
+      </if>
+      <if test="carBrandId != null">
+        #{carBrandId,jdbcType=INTEGER},
+      </if>
+      <if test="carTypeId != null">
+        #{carTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="manufactor != null">
+        #{manufactor,jdbcType=VARCHAR},
+      </if>
+      <if test="modelYear != null">
+        #{modelYear,jdbcType=VARCHAR},
+      </if>
+      <if test="displacement != null">
+        #{displacement,jdbcType=VARCHAR},
+      </if>
+      <if test="transmission != null">
+        #{transmission,jdbcType=VARCHAR},
+      </if>
+      <if test="gear != null">
+        #{gear,jdbcType=VARCHAR},
+      </if>
+      <if test="transmissionModel != null">
+        #{transmissionModel,jdbcType=VARCHAR},
+      </if>
+      <if test="capacity != null">
+        #{capacity,jdbcType=VARCHAR},
+      </if>
+      <if test="joint != null">
+        #{joint,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.zheng.crawler.dao.model.CrawlerCarDetailsExample" resultType="java.lang.Long">
+    select count(*) from crawler_car_details
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update crawler_car_details
+    <set>
+      <if test="record.carDetailsId != null">
+        car_details_id = #{record.carDetailsId,jdbcType=INTEGER},
+      </if>
+      <if test="record.carDetailsName != null">
+        car_details_name = #{record.carDetailsName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.carBrandId != null">
+        car_brand_id = #{record.carBrandId,jdbcType=INTEGER},
+      </if>
+      <if test="record.carTypeId != null">
+        car_type_id = #{record.carTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="record.manufactor != null">
+        manufactor = #{record.manufactor,jdbcType=VARCHAR},
+      </if>
+      <if test="record.modelYear != null">
+        model_year = #{record.modelYear,jdbcType=VARCHAR},
+      </if>
+      <if test="record.displacement != null">
+        displacement = #{record.displacement,jdbcType=VARCHAR},
+      </if>
+      <if test="record.transmission != null">
+        transmission = #{record.transmission,jdbcType=VARCHAR},
+      </if>
+      <if test="record.gear != null">
+        gear = #{record.gear,jdbcType=VARCHAR},
+      </if>
+      <if test="record.transmissionModel != null">
+        transmission_model = #{record.transmissionModel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.capacity != null">
+        capacity = #{record.capacity,jdbcType=VARCHAR},
+      </if>
+      <if test="record.joint != null">
+        joint = #{record.joint,jdbcType=VARCHAR},
+      </if>
+      <if test="record.creator != null">
+        creator = #{record.creator,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update crawler_car_details
+    set car_details_id = #{record.carDetailsId,jdbcType=INTEGER},
+      car_details_name = #{record.carDetailsName,jdbcType=VARCHAR},
+      car_brand_id = #{record.carBrandId,jdbcType=INTEGER},
+      car_type_id = #{record.carTypeId,jdbcType=INTEGER},
+      manufactor = #{record.manufactor,jdbcType=VARCHAR},
+      model_year = #{record.modelYear,jdbcType=VARCHAR},
+      displacement = #{record.displacement,jdbcType=VARCHAR},
+      transmission = #{record.transmission,jdbcType=VARCHAR},
+      gear = #{record.gear,jdbcType=VARCHAR},
+      transmission_model = #{record.transmissionModel,jdbcType=VARCHAR},
+      capacity = #{record.capacity,jdbcType=VARCHAR},
+      joint = #{record.joint,jdbcType=VARCHAR},
+      creator = #{record.creator,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zheng.crawler.dao.model.CrawlerCarDetails">
+    update crawler_car_details
+    <set>
+      <if test="carDetailsName != null">
+        car_details_name = #{carDetailsName,jdbcType=VARCHAR},
+      </if>
+      <if test="carBrandId != null">
+        car_brand_id = #{carBrandId,jdbcType=INTEGER},
+      </if>
+      <if test="carTypeId != null">
+        car_type_id = #{carTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="manufactor != null">
+        manufactor = #{manufactor,jdbcType=VARCHAR},
+      </if>
+      <if test="modelYear != null">
+        model_year = #{modelYear,jdbcType=VARCHAR},
+      </if>
+      <if test="displacement != null">
+        displacement = #{displacement,jdbcType=VARCHAR},
+      </if>
+      <if test="transmission != null">
+        transmission = #{transmission,jdbcType=VARCHAR},
+      </if>
+      <if test="gear != null">
+        gear = #{gear,jdbcType=VARCHAR},
+      </if>
+      <if test="transmissionModel != null">
+        transmission_model = #{transmissionModel,jdbcType=VARCHAR},
+      </if>
+      <if test="capacity != null">
+        capacity = #{capacity,jdbcType=VARCHAR},
+      </if>
+      <if test="joint != null">
+        joint = #{joint,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null">
+        creator = #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where car_details_id = #{carDetailsId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zheng.crawler.dao.model.CrawlerCarDetails">
+    update crawler_car_details
+    set car_details_name = #{carDetailsName,jdbcType=VARCHAR},
+      car_brand_id = #{carBrandId,jdbcType=INTEGER},
+      car_type_id = #{carTypeId,jdbcType=INTEGER},
+      manufactor = #{manufactor,jdbcType=VARCHAR},
+      model_year = #{modelYear,jdbcType=VARCHAR},
+      displacement = #{displacement,jdbcType=VARCHAR},
+      transmission = #{transmission,jdbcType=VARCHAR},
+      gear = #{gear,jdbcType=VARCHAR},
+      transmission_model = #{transmissionModel,jdbcType=VARCHAR},
+      capacity = #{capacity,jdbcType=VARCHAR},
+      joint = #{joint,jdbcType=VARCHAR},
+      creator = #{creator,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where car_details_id = #{carDetailsId,jdbcType=INTEGER}
+  </update>
+  <cache type="org.mybatis.caches.ehcache.LoggingEhcache" />
+</mapper>

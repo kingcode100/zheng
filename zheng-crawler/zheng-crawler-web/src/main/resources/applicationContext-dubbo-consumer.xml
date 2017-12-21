@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
+
+    <dubbo:application name="zheng-crawler-web"/>
+
+    <dubbo:registry file="./zheng-crawler-web-dubbo.cache" address="zookeeper://zkserver:2181"/>
+
+    <!-- 订阅服务 -->
+    <dubbo:consumer check="false"/>
+
+    <dubbo:reference id="crawlerService" interface="com.zheng.crawler.rpc.api.CrawlerService" mock="true"/>
+
+    <!-- 用户详情 -->
+    <dubbo:reference id="crawlerCarBrandService" interface="com.zheng.crawler.rpc.api.CrawlerCarBrandService" mock="true"/>
+
+    <dubbo:reference id="crawlerCarTypeService" interface="com.zheng.crawler.rpc.api.CrawlerCarTypeService" mock="true"/>
+
+    <dubbo:reference id="crawlerCarDetailsService" interface="com.zheng.crawler.rpc.api.CrawlerCarDetailsService" mock="true"/>
+
+
+</beans>

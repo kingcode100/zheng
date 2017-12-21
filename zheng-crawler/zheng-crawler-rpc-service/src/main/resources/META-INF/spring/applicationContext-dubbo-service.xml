@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
+
+    <dubbo:application name="zheng-crawler-rpc-service"/>
+
+    <dubbo:registry address="zookeeper://zkserver:2181"/>
+
+    <dubbo:protocol name="dubbo" port="20885"/>
+
+    <!--<dubbo:monitor protocol="registry"/>-->
+    <bean id="crawlerService" class="com.zheng.crawler.rpc.service.impl.CrawlerServiceImpl"/>
+    <dubbo:service interface="com.zheng.crawler.rpc.api.CrawlerService" ref="crawlerService" timeout="5000" retries="0"/>
+
+    <bean id="crawlerCarBrandService" class="com.zheng.crawler.rpc.service.impl.CrawlerCarBrandServiceImpl"/>
+    <dubbo:service interface="com.zheng.crawler.rpc.api.CrawlerCarBrandService" ref="crawlerCarBrandService" timeout="5000" />
+
+    <bean id="crawlerCarTypeService" class="com.zheng.crawler.rpc.service.impl.CrawlerCarTypeServiceImpl"/>
+    <dubbo:service interface="com.zheng.crawler.rpc.api.CrawlerCarTypeService" ref="crawlerCarTypeService" timeout="5000" />
+
+    <bean id="crawlerCarDetailsService" class="com.zheng.crawler.rpc.service.impl.CrawlerCarDetailsServiceImpl"/>
+    <dubbo:service interface="com.zheng.crawler.rpc.api.CrawlerCarDetailsService" ref="crawlerCarDetailsService" timeout="5000" />
+
+
+</beans>
