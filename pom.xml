@@ -23,6 +23,7 @@
         <module>zheng-common</module>
         <module>zheng-oss</module>
         <module>zheng-upms</module>
+		<module>zheng-crawler</module>
         <module>zheng-cms</module>
         <module>zheng-pay</module>
         <module>zheng-ucenter</module>
