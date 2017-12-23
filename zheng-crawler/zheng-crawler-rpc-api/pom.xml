@@ -18,17 +18,17 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-
     <dependencies>
         <dependency>
             <groupId>com.zheng</groupId>
             <artifactId>zheng-crawler-dao</artifactId>
             <version>1.0.0</version>
+            <type>jar</type>
         </dependency>
     </dependencies>
 
     <build>
-        <finalName>zheng-upms-rpc-api</finalName>
+        <finalName>zheng-crawler-rpc-api</finalName>
         <resources>
             <resource>
                 <directory>src/main/java</directory>
