@@ -16,7 +16,6 @@
 
     <dubbo:reference id="crawlerService" interface="com.zheng.crawler.rpc.api.CrawlerService" mock="true"/>
 
-    <!-- 用户详情 -->
     <dubbo:reference id="crawlerCarBrandService" interface="com.zheng.crawler.rpc.api.CrawlerCarBrandService" mock="true"/>
 
     <dubbo:reference id="crawlerCarTypeService" interface="com.zheng.crawler.rpc.api.CrawlerCarTypeService" mock="true"/>
