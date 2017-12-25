@@ -22,5 +22,7 @@
 
     <dubbo:reference id="crawlerCarDetailsService" interface="com.zheng.crawler.rpc.api.CrawlerCarDetailsService" mock="true"/>
 
+    <dubbo:reference id="crawlerJointImgService" interface="com.zheng.crawler.rpc.api.CrawlerJointImgService" mock="true"/>
+
 
 </beans>

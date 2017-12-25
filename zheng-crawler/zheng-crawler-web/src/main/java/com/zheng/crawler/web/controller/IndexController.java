@@ -3,11 +3,13 @@ package com.zheng.crawler.web.controller;
 import com.github.tobato.fastdfs.domain.StorePath;
 import com.github.tobato.fastdfs.service.FastFileStorageClient;
 import com.zheng.common.base.BaseController;
+import com.zheng.common.base.BaseResult;
 import com.zheng.crawler.dao.model.*;
 import com.zheng.crawler.rpc.api.CrawlerCarBrandService;
 import com.zheng.crawler.rpc.api.CrawlerCarDetailsService;
 import com.zheng.crawler.rpc.api.CrawlerCarTypeService;
 import com.zheng.crawler.rpc.api.CrawlerService;
+import com.zheng.crawler.rpc.api.CrawlerJointImgService;
 import com.zheng.crawler.web.model.User;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -24,9 +26,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.*;
 
 /**
@@ -49,6 +51,15 @@ public class IndexController extends BaseController {
 
     @Autowired
     private CrawlerCarDetailsService crawlerCarDetailsService;
+
+    @Autowired
+    private CrawlerJointImgService crawlerJointImgService;
+
+    @Autowired
+    FastFileStorageClient fastFileStorageClient;
+
+    private static String coodies = "hpbti37gbu2s50vjrc4reog7m1";
+
 
 
     /**
@@ -165,7 +176,129 @@ public class IndexController extends BaseController {
         return thymeleaf("/index");
     }
 
-    private static String coodies = "hpbti37gbu2s50vjrc4reog7m1";
+
+    /**
+     * 抓取汽车详细信息
+     *
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/carimg", method = RequestMethod.GET)
+    public String carimg(Model model) {
+
+        //下载品牌IMG
+//        List<CrawlerCarBrand> carBrandList = crawlerCarBrandService.selectByExample(new CrawlerCarBrandExample());
+//        for (CrawlerCarBrand item : carBrandList) {
+//            String url = item.getLogo();
+//            if(null == url|| url.equals("null") || url.length() == 0){
+//                continue;
+//            }
+//            String fileName = downloadPicture(url,"D:/fdfsimg/");
+//            item.setLogo(fileName);
+//            crawlerCarBrandService.updateByPrimaryKey(item);
+//        }
+
+
+//下载变速箱
+        CrawlerJointImgExample crawlerJointImgExample = null;
+        crawlerJointImgExample = new CrawlerJointImgExample();
+        List<CrawlerJointImg> jointImgList = crawlerJointImgService.selectByExample(crawlerJointImgExample);
+        Map<String,String> map = new HashMap<>();
+        for (CrawlerJointImg item : jointImgList) {
+            String url = item.getImg();
+            if (null == url || url.equals("null") || url.length() == 0) {
+                continue;
+            }
+
+            crawlerJointImgExample = new CrawlerJointImgExample();
+            crawlerJointImgExample.createCriteria()
+                    .andImgEqualTo(item.getImg());
+
+            CrawlerJointImg crawlerJointImg = null;
+            if (null != map.get(url)) {
+                crawlerJointImg = new CrawlerJointImg();
+                crawlerJointImg.setImg(map.get(url));
+                crawlerJointImgService.updateByExampleSelective(crawlerJointImg, crawlerJointImgExample);
+                continue;
+            }
+
+
+            String fileName = downloadPicture(url, "D:/fdfsdetail/");
+            crawlerJointImg = new CrawlerJointImg();
+            crawlerJointImg.setImg(fileName);
+            crawlerJointImgService.updateByExampleSelective(crawlerJointImg, crawlerJointImgExample);
+            map.put(url,fileName);
+        }
+
+        System.out.println("============================完成");
+        return thymeleaf("/index");
+    }
+
+
+    /**
+     * 转换连接
+     *
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/changeurl", method = RequestMethod.GET)
+    public String changeurl(Model model) throws FileNotFoundException {
+
+//        File file = new File("/alidata/xiangshun100/img/fdfsimg/");
+//
+//        String fileName = file.getName();
+//        StorePath storePath = fastFileStorageClient.uploadFile(null, new FileInputStream(file), file.length(), "jpg");
+//        System.out.println(storePath);
+
+
+        CrawlerJointImgExample crawlerJointImgExample = null;
+        crawlerJointImgExample = new CrawlerJointImgExample();
+        List<CrawlerJointImg> jointImgList = crawlerJointImgService.selectByExample(crawlerJointImgExample);
+        Map<String,String> map = new HashMap<>();
+        for (CrawlerJointImg item : jointImgList) {
+            String url = item.getImg();
+            if (null == url || url.equals("null") || url.length() == 0) {
+                continue;
+            }
+
+            crawlerJointImgExample = new CrawlerJointImgExample();
+            crawlerJointImgExample.createCriteria()
+                    .andImgEqualTo(item.getImg());
+
+            CrawlerJointImg crawlerJointImg = null;
+            if (null != map.get(url)) {
+                crawlerJointImg = new CrawlerJointImg();
+                crawlerJointImg.setImg(map.get(url));
+                crawlerJointImgService.updateByExampleSelective(crawlerJointImg, crawlerJointImgExample);
+                continue;
+            }
+
+            File file = new File("/alidata/xiangshun100/img/fdfsimg/"+item.getImg());
+            StorePath storePath = fastFileStorageClient.uploadFile(null, new FileInputStream(file), file.length(), "jpg");
+//            String fileName = downloadPicture(url, "D:/fdfsdetail/");
+            crawlerJointImg = new CrawlerJointImg();
+            crawlerJointImg.setImg(storePath.getPath());
+            crawlerJointImgService.updateByExampleSelective(crawlerJointImg, crawlerJointImgExample);
+            map.put(url,storePath.getPath());
+        }
+
+        System.out.println("============================完成");
+        return thymeleaf("/index");
+    }
+
+    /**
+     * 转换连接
+     *
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    public Object test(Model model) throws FileNotFoundException {
+
+        File file = new File("/alidata/xiangshun100/img/aaa.txt");
+        StorePath storePath = fastFileStorageClient.uploadFile(null, new FileInputStream(file), file.length(), "txt");
+        return new BaseResult(2,"测试成功",storePath);
+    }
 
     //品牌页面
     private void grabCase() {
@@ -531,7 +664,8 @@ public class IndexController extends BaseController {
         return carDetails;
     }
 
-    public static void main(String[] args) {
+
+    public static void main(String[] args) throws IOException {
 //        String configFileName = "E:\\zheng\\zheng\\zheng-crawler\\zheng-crawler-web\\src\\main\\resources\\fdfs_client.conf";
 //
 //        try {
@@ -545,11 +679,6 @@ public class IndexController extends BaseController {
 //        System.out.println(Arrays.asList(files));
 
 
-
-
-
-
-
 //        IndexController i = new IndexController();
 ////        i.grabNianfen("2951");
 ////        i.grabPailiang("33","2951","2015");
@@ -559,24 +688,43 @@ public class IndexController extends BaseController {
 //        i.grabResult(58, 22, "2004", "2.0L", "1352");
 
 
+//        getimg("http://car3.autoimg.cn/cardfs/brand/50/g23/M09/5B/8F/autohomecar__wKgFXFbCuGGAark9AAAOm8MlQDA537.jpg", fileName);
+//        String fileName = downloadPicture("http://car3.autoimg.cn/cardfs/brand/50/g23/M09/5B/8F/autohomecar__wKgFXFbCuGGAark9AAAOm8MlQDA537.jpg");
+//        System.out.println(fileName);
     }
 
-    @Autowired
-    FastFileStorageClient fastFileStorageClient;
+    //链接url下载图片
+    private String downloadPicture(String urlList, String path) {
+        URL url = null;
+        int imageNumber = 0;
+        String fileName = UUID.randomUUID().toString().replace("-", "");
+        String imageName = null;
+        String suffixName = null;
+        try {
+            url = new URL(urlList);
+            DataInputStream dataInputStream = new DataInputStream(url.openStream());
+            suffixName = urlList.substring(urlList.lastIndexOf("."));
+            imageName = path + fileName + suffixName;
 
-    /**
-     * 抓取汽车品牌
-     *
-     * @param model
-     * @return
-     */
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
-    public String test(Model model) throws FileNotFoundException {
+            FileOutputStream fileOutputStream = new FileOutputStream(new File(imageName));
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
 
-       File file = new File("E:\\aa.jpg");
-        StorePath storePath = fastFileStorageClient.uploadFile(null, new FileInputStream(file), file.length(), "jpg");
-        System.out.println(storePath);
-        return thymeleaf("/index");
+            byte[] buffer = new byte[1024];
+            int length;
+
+            while ((length = dataInputStream.read(buffer)) > 0) {
+                output.write(buffer, 0, length);
+            }
+            byte[] context = output.toByteArray();
+            fileOutputStream.write(output.toByteArray());
+            dataInputStream.close();
+            fileOutputStream.close();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            return null;
+        } catch (IOException e) {
+            return null;
+        }
+        return fileName+suffixName;
     }
-
 }

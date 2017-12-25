@@ -26,4 +26,7 @@
     <bean id="crawlerCarDetailsService" class="com.zheng.crawler.rpc.service.impl.CrawlerCarDetailsServiceImpl"/>
     <dubbo:service interface="com.zheng.crawler.rpc.api.CrawlerCarDetailsService" ref="crawlerCarDetailsService" timeout="5000" />
 
+    <bean id="crawlerJointImgService" class="com.zheng.crawler.rpc.service.impl.CrawlerJointImgServiceImpl"/>
+    <dubbo:service interface="com.zheng.crawler.rpc.api.CrawlerJointImgService" ref="crawlerJointImgService" timeout="5000" />
+
 </beans>
