@@ -266,7 +266,7 @@ public class IndexController extends BaseController {
                 continue;
             }
 
-            File file = new File("/alidata/xiangshun100/img/fdfsimg/"+item.getImg());
+            File file = new File("/alidata/xiangshun100/img/fdfsdetail/"+item.getImg());
             StorePath storePath = fastFileStorageClient.uploadFile(null, new FileInputStream(file), file.length(), "jpg");
 //            String fileName = downloadPicture(url, "D:/fdfsdetail/");
             crawlerJointImg = new CrawlerJointImg();
