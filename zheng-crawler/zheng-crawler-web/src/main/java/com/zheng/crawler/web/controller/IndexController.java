@@ -178,7 +178,7 @@ public class IndexController extends BaseController {
 
 
     /**
-     * 抓取汽车详细信息
+     * 下载图片
      *
      * @param model
      * @return
@@ -187,48 +187,48 @@ public class IndexController extends BaseController {
     public String carimg(Model model) {
 
         //下载品牌IMG
-//        List<CrawlerCarBrand> carBrandList = crawlerCarBrandService.selectByExample(new CrawlerCarBrandExample());
-//        for (CrawlerCarBrand item : carBrandList) {
-//            String url = item.getLogo();
-//            if(null == url|| url.equals("null") || url.length() == 0){
-//                continue;
-//            }
-//            String fileName = downloadPicture(url,"D:/fdfsimg/");
-//            item.setLogo(fileName);
-//            crawlerCarBrandService.updateByPrimaryKey(item);
-//        }
+        List<CrawlerCarBrand> carBrandList = crawlerCarBrandService.selectByExample(new CrawlerCarBrandExample());
+        for (CrawlerCarBrand item : carBrandList) {
+            String url = item.getLogo();
+            if(null == url|| url.equals("null") || url.length() == 0){
+                continue;
+            }
+            String fileName = downloadPicture(url,"D:/fdfsimg/");
+            item.setLogo(fileName);
+            crawlerCarBrandService.updateByPrimaryKey(item);
+        }
 
 
 //下载变速箱
-        CrawlerJointImgExample crawlerJointImgExample = null;
-        crawlerJointImgExample = new CrawlerJointImgExample();
-        List<CrawlerJointImg> jointImgList = crawlerJointImgService.selectByExample(crawlerJointImgExample);
-        Map<String,String> map = new HashMap<>();
-        for (CrawlerJointImg item : jointImgList) {
-            String url = item.getImg();
-            if (null == url || url.equals("null") || url.length() == 0) {
-                continue;
-            }
-
-            crawlerJointImgExample = new CrawlerJointImgExample();
-            crawlerJointImgExample.createCriteria()
-                    .andImgEqualTo(item.getImg());
-
-            CrawlerJointImg crawlerJointImg = null;
-            if (null != map.get(url)) {
-                crawlerJointImg = new CrawlerJointImg();
-                crawlerJointImg.setImg(map.get(url));
-                crawlerJointImgService.updateByExampleSelective(crawlerJointImg, crawlerJointImgExample);
-                continue;
-            }
-
-
-            String fileName = downloadPicture(url, "D:/fdfsdetail/");
-            crawlerJointImg = new CrawlerJointImg();
-            crawlerJointImg.setImg(fileName);
-            crawlerJointImgService.updateByExampleSelective(crawlerJointImg, crawlerJointImgExample);
-            map.put(url,fileName);
-        }
+//        CrawlerJointImgExample crawlerJointImgExample = null;
+//        crawlerJointImgExample = new CrawlerJointImgExample();
+//        List<CrawlerJointImg> jointImgList = crawlerJointImgService.selectByExample(crawlerJointImgExample);
+//        Map<String,String> map = new HashMap<>();
+//        for (CrawlerJointImg item : jointImgList) {
+//            String url = item.getImg();
+//            if (null == url || url.equals("null") || url.length() == 0) {
+//                continue;
+//            }
+//
+//            crawlerJointImgExample = new CrawlerJointImgExample();
+//            crawlerJointImgExample.createCriteria()
+//                    .andImgEqualTo(item.getImg());
+//
+//            CrawlerJointImg crawlerJointImg = null;
+//            if (null != map.get(url)) {
+//                crawlerJointImg = new CrawlerJointImg();
+//                crawlerJointImg.setImg(map.get(url));
+//                crawlerJointImgService.updateByExampleSelective(crawlerJointImg, crawlerJointImgExample);
+//                continue;
+//            }
+//
+//
+//            String fileName = downloadPicture(url, "D:/fdfsdetail/");
+//            crawlerJointImg = new CrawlerJointImg();
+//            crawlerJointImg.setImg(fileName);
+//            crawlerJointImgService.updateByExampleSelective(crawlerJointImg, crawlerJointImgExample);
+//            map.put(url,fileName);
+//        }
 
         System.out.println("============================完成");
         return thymeleaf("/index");
