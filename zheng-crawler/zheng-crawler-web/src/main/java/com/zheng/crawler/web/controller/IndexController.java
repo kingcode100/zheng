@@ -244,13 +244,6 @@ public class IndexController extends BaseController {
     @RequestMapping(value = "/changeurl", method = RequestMethod.GET)
     public String changeurl(Model model) throws FileNotFoundException {
 
-//        File file = new File("/alidata/xiangshun100/img/fdfsimg/");
-//
-//        String fileName = file.getName();
-//        StorePath storePath = fastFileStorageClient.uploadFile(null, new FileInputStream(file), file.length(), "jpg");
-//        System.out.println(storePath);
-
-
         CrawlerJointImgExample crawlerJointImgExample = null;
         crawlerJointImgExample = new CrawlerJointImgExample();
         List<CrawlerJointImg> jointImgList = crawlerJointImgService.selectByExample(crawlerJointImgExample);
@@ -277,7 +270,7 @@ public class IndexController extends BaseController {
             StorePath storePath = fastFileStorageClient.uploadFile(null, new FileInputStream(file), file.length(), "jpg");
 //            String fileName = downloadPicture(url, "D:/fdfsdetail/");
             crawlerJointImg = new CrawlerJointImg();
-            crawlerJointImg.setImg(storePath.getPath());
+            crawlerJointImg.setImg("http://image.xiangshun100.com/"+storePath.getFullPath());
             crawlerJointImgService.updateByExampleSelective(crawlerJointImg, crawlerJointImgExample);
             map.put(url,storePath.getPath());
         }
