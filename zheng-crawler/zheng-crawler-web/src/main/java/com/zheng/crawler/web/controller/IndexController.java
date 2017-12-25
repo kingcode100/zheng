@@ -244,34 +244,34 @@ public class IndexController extends BaseController {
     @RequestMapping(value = "/changeurl", method = RequestMethod.GET)
     public String changeurl(Model model) throws FileNotFoundException {
 
-        CrawlerJointImgExample crawlerJointImgExample = null;
-        crawlerJointImgExample = new CrawlerJointImgExample();
-        List<CrawlerJointImg> jointImgList = crawlerJointImgService.selectByExample(crawlerJointImgExample);
+        CrawlerCarBrandExample crawlerCarBrandExample = null;
+        crawlerCarBrandExample = new CrawlerCarBrandExample();
+        List<CrawlerCarBrand> carBrandList = crawlerCarBrandService.selectByExample(crawlerCarBrandExample);
         Map<String,String> map = new HashMap<>();
-        for (CrawlerJointImg item : jointImgList) {
-            String url = item.getImg();
+        for (CrawlerCarBrand item : carBrandList) {
+            String url = item.getLogo();
             if (null == url || url.equals("null") || url.length() == 0) {
                 continue;
             }
 
-            crawlerJointImgExample = new CrawlerJointImgExample();
-            crawlerJointImgExample.createCriteria()
-                    .andImgEqualTo(item.getImg());
+            crawlerCarBrandExample = new CrawlerCarBrandExample();
+            crawlerCarBrandExample.createCriteria()
+                    .andLogoEqualTo(item.getLogo());
 
-            CrawlerJointImg crawlerJointImg = null;
+            CrawlerCarBrand crawlerCarBrand = null;
             if (null != map.get(url)) {
-                crawlerJointImg = new CrawlerJointImg();
-                crawlerJointImg.setImg(map.get(url));
-                crawlerJointImgService.updateByExampleSelective(crawlerJointImg, crawlerJointImgExample);
+                crawlerCarBrand = new CrawlerCarBrand();
+                crawlerCarBrand.setLogo(map.get(url));
+                crawlerCarBrandService.updateByExampleSelective(crawlerCarBrand, crawlerCarBrandExample);
                 continue;
             }
 
-            File file = new File("/alidata/xiangshun100/img/fdfsdetail/"+item.getImg());
+            File file = new File("/alidata/xiangshun100/img/fdfsdetail/"+item.getLogo());
             StorePath storePath = fastFileStorageClient.uploadFile(null, new FileInputStream(file), file.length(), "jpg");
 //            String fileName = downloadPicture(url, "D:/fdfsdetail/");
-            crawlerJointImg = new CrawlerJointImg();
-            crawlerJointImg.setImg("http://image.xiangshun100.com/"+storePath.getFullPath());
-            crawlerJointImgService.updateByExampleSelective(crawlerJointImg, crawlerJointImgExample);
+            crawlerCarBrand = new CrawlerCarBrand();
+            crawlerCarBrand.setLogo("http://image.xiangshun100.com/"+storePath.getFullPath());
+            crawlerCarBrandService.updateByExampleSelective(crawlerCarBrand, crawlerCarBrandExample);
             map.put(url,storePath.getPath());
         }
 
