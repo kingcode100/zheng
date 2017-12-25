@@ -293,11 +293,15 @@ public class IndexController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/test", method = RequestMethod.GET)
-    public Object test(Model model) throws FileNotFoundException {
+    public String test(Model model) throws FileNotFoundException {
 
         File file = new File("/alidata/xiangshun100/img/aaa.txt");
         StorePath storePath = fastFileStorageClient.uploadFile(null, new FileInputStream(file), file.length(), "txt");
-        return new BaseResult(2,"测试成功",storePath);
+        System.out.println(storePath.getPath());
+        System.out.println(storePath.getFullPath());
+        System.out.println(storePath.getGroup());
+
+        return thymeleaf("/index");
     }
 
     //品牌页面
