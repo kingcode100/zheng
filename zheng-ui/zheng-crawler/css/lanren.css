@@ -10,6 +10,7 @@ header{
     background: #ececea;
     border-bottom: 1px solid #ddd;
 }
+
 header.fixed{
     position: fixed;
     left: 0;
@@ -51,6 +52,13 @@ header.fixed{
     width: 100%;
     padding-top: 45px;
     overflow: hidden;
+    text-align: center;
+}
+.sort_box table{
+    width: 100%;
+}
+.sort_box img{
+    max-width: 72%;
 }
 .sort_list{
     padding:10px 60px 10px 80px;

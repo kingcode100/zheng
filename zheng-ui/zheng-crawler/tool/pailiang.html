@@ -21,9 +21,7 @@
 <!-- 代码部分begin -->
 <header class="fixed">
     <div class="header">
-        筛选：
-        <img th:src="${pinpai.logo}">
-        <span th:text="${pinpai.carBrandName}+'-'+${chexi.carTypeName}+'-'+${year}"></span>
+        <span th:text="${pinpai.carBrandName}+'-'+${chexi.carTypeName}+'-'+${year}+'款'"></span>
     </div>
 </header>
 <div id="letter" ></div>
@@ -39,7 +37,6 @@
 </div>
 <script src="/js/jquery-1.8.3.min.js"  th:src="@{${uiPath} + ${appName} + '/js/jquery-1.8.3.min.js'}"></script>
 <script src="/js/jquery.charfirst.pinyin.js"  th:src="@{${uiPath} + ${appName} + '/js/jquery.charfirst.pinyin.js'}"></script>
-<script src="/js/sort.js"  th:src="@{${uiPath} + ${appName} + '/js/sort.js'}"></script>
 <!-- 代码部分end -->
 
 </body>

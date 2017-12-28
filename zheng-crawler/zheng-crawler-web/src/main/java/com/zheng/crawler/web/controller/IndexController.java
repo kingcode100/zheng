@@ -403,6 +403,8 @@ public class IndexController extends BaseController {
     @RequestMapping(value = "/tool/result", method = RequestMethod.GET)
     public String result(Model model,Integer chexiId ,String year,String pailiang,String dangwei,String dtype){
         CrawlerCarDetails carDetails = null;
+        CrawlerCarType carType = null;
+        CrawlerCarBrand carBrand = null;
         List<CrawlerJointImg> jointImgList = null;
         CrawlerJointImgExample jointImgExample = null;
         CrawlerCarDetailsExample carDetailsExample = new CrawlerCarDetailsExample();
@@ -419,6 +421,10 @@ public class IndexController extends BaseController {
         jointImgExample.createCriteria().andCarDetailsIdEqualTo(carDetails.getCarDetailsId());
         jointImgList = crawlerJointImgService.selectByExample(jointImgExample);
 
+        carType = crawlerCarTypeService.selectByPrimaryKey(chexiId);
+        carBrand = crawlerCarBrandService.selectByPrimaryKey(carType.getCarBrandId());
+        model.addAttribute("pinpai",carBrand);
+        model.addAttribute("chexi",carType);
         model.addAttribute("result",carDetails);
         model.addAttribute("jointImgList",jointImgList);
         return thymeleaf("/tool/result");

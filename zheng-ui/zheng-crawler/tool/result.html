@@ -17,11 +17,55 @@
     </div>
 </header>
 <div id="letter" ></div>
-<div class="sort_box">
-    <span th:text="${result}"></span>
-    <span th:text="${result.carDetailsId}"></span>
-    <div th:each="jointImg:${jointImgList}" th:if="${jointImg.jointImgId} != null" class="sort_list" >
-        <div class="num_logo">
+<div class="sort_box" >
+    <span th:text="${result.carDetailsName}"></span>
+    <table class="table table-striped">
+        <tbody>
+        <tr>
+            <td>车系</td>
+            <td  th:text="${chexi.carTypeName}"></td>
+        </tr>
+        <tr>
+            <td>品牌</td>
+            <td  th:text="${pinpai.carBrandName}"></td>
+        </tr>
+        <tr>
+            <td>厂家</td>
+            <td  th:text="${result.manufactor}"></td>
+        </tr>
+        <tr>
+            <td>年款</td>
+            <td  th:text="${result.modelYear}+'款'"></td>
+        </tr>
+        <tr>
+            <td>排量</td>
+            <td  th:text="${result.displacement}"></td>
+        </tr>
+        <tr>
+            <td>变速器</td>
+            <td  th:text="${result.transmission}"></td>
+        </tr>
+        <tr>
+            <td>变速器型号</td>
+            <td  th:text="${result.transmissionModel}"></td>
+        </tr>
+        <tr>
+            <td>档位</td>
+            <td  th:text="${result.gear}"></td>
+        </tr>
+        <tr>
+            <td>更换升数</td>
+            <td  th:text="${result.capacity}"></td>
+        </tr>
+        <tr>
+            <td>接头</td>
+            <td  th:text="${result.joint}"></td>
+        </tr>
+        </tbody>
+    </table>
+<br/>
+    <div th:each="jointImg:${jointImgList}" th:if="${jointImg.jointImgId} != null" >
+        <div class="">
             <img th:src="${jointImg.img}"/>
         </div>
         <div class="num_name" th:text="${jointImg.name}"> </div>
@@ -35,6 +79,13 @@
 <script src="/js/jquery-1.8.3.min.js"  th:src="@{${uiPath} + ${appName} + '/js/jquery-1.8.3.min.js'}"></script>
 <script src="/js/jquery.charfirst.pinyin.js"  th:src="@{${uiPath} + ${appName} + '/js/jquery.charfirst.pinyin.js'}"></script>
 <!-- 代码部分end -->
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css">
 
+<!-- Latest compiled and minified JavaScript -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
+
+<!-- Latest compiled and minified Locales -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/locale/bootstrap-table-zh-CN.min.js"></script>
 </body>
 </html>
