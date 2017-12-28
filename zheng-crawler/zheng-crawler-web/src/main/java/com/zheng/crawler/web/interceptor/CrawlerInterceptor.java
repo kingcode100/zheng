@@ -19,12 +19,15 @@ public class CrawlerInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        // 过滤ajax
+        // crawler过滤ajax
         if (null != request.getHeader("X-Requested-With") && "XMLHttpRequest".equalsIgnoreCase(request.getHeader("X-Requested-With"))) {
             return true;
         }
+        // zheng-ui静态资源配置信息
         String appName = PropertiesFileUtil.getInstance().get("app.name");
-        //request.setAttribute("");
+        String uiPath = PropertiesFileUtil.getInstance().get("zheng.ui.path");
+        request.setAttribute("appName", appName);
+        request.setAttribute("uiPath", uiPath);
         return true;
     }
 

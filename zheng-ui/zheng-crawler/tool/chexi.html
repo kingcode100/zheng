@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="content-type" content="text/html;charset=utf-8"></meta>
+    <meta name="viewport" content="width=device-width,height=device-height,minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,user-scalable=no" />
+    <meta name="format-detection" content="telephone=no,email=no,adress=no" />
+    <title>查询工具</title>
+    <link rel="stylesheet" href="/css/lanren.css" th:href="@{${uiPath}+ ${appName}+'/css/lanren.css'}" >
+    <script>
+
+        function year(carTypeId){
+            window.location.href="/tool/year/"+carTypeId;
+        }
+    </script>
+</head>
+<body>
+
+<!-- 代码部分begin -->
+<header class="fixed">
+    <div class="header">
+        筛选：
+        <img th:src="${pinpai.logo}">
+        <span th:text="${pinpai.carBrandName}"></span>
+    </div>
+
+</header>
+<div id="letter" ></div>
+<div class="sort_box">
+    <div th:each="chexi:${chexis}" th:if="${chexi.carTypeId} != null" class="sort_list" th:onclick="'year(\''+${chexi.carTypeId}+'\')'" >
+        <div class="num_name" th:text="${chexi.carTypeName}"> </div>
+    </div>
+</div>
+<div class="initials">
+    <ul>
+        <li><img src="/images/068.png" th:src="@{${uiPath} + ${appName} + '/images/068.png'}"></li>
+    </ul>
+</div>
+<script src="/js/jquery-1.8.3.min.js"  th:src="@{${uiPath} + ${appName} + '/js/jquery-1.8.3.min.js'}"></script>
+<script src="/js/jquery.charfirst.pinyin.js"  th:src="@{${uiPath} + ${appName} + '/js/jquery.charfirst.pinyin.js'}"></script>
+<!-- 代码部分end -->
+
+</body>
+</html>

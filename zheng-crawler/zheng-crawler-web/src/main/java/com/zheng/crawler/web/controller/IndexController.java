@@ -23,9 +23,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -58,7 +60,7 @@ public class IndexController extends BaseController {
     @Autowired
     FastFileStorageClient fastFileStorageClient;
 
-    private static String coodies = "hpbti37gbu2s50vjrc4reog7m1";
+    private static String coodies = "48nlj6k2nil2nkuh72qckdk1g1";
 
 
 
@@ -186,49 +188,50 @@ public class IndexController extends BaseController {
     @RequestMapping(value = "/carimg", method = RequestMethod.GET)
     public String carimg(Model model) {
 
-        //下载品牌IMG
-        List<CrawlerCarBrand> carBrandList = crawlerCarBrandService.selectByExample(new CrawlerCarBrandExample());
-        for (CrawlerCarBrand item : carBrandList) {
-            String url = item.getLogo();
-            if(null == url|| url.equals("null") || url.length() == 0){
-                continue;
-            }
-            String fileName = downloadPicture(url,"D:/fdfsimg/");
-            item.setLogo(fileName);
-            crawlerCarBrandService.updateByPrimaryKey(item);
-        }
+//        //下载品牌IMG
+//        List<CrawlerCarBrand> carBrandList = crawlerCarBrandService.selectByExample(new CrawlerCarBrandExample());
+//        for (CrawlerCarBrand item : carBrandList) {
+//            String url = item.getLogo();
+//            if(null == url|| url.equals("null") || url.length() == 0){
+//                continue;
+//            }
+//            String fileName = downloadPicture(url,"D:/fdfsimg/");
+//            item.setLogo(fileName);
+//            crawlerCarBrandService.updateByPrimaryKey(item);
+//        }
+
 
 
 //下载变速箱
-//        CrawlerJointImgExample crawlerJointImgExample = null;
-//        crawlerJointImgExample = new CrawlerJointImgExample();
-//        List<CrawlerJointImg> jointImgList = crawlerJointImgService.selectByExample(crawlerJointImgExample);
-//        Map<String,String> map = new HashMap<>();
-//        for (CrawlerJointImg item : jointImgList) {
-//            String url = item.getImg();
-//            if (null == url || url.equals("null") || url.length() == 0) {
-//                continue;
-//            }
-//
-//            crawlerJointImgExample = new CrawlerJointImgExample();
-//            crawlerJointImgExample.createCriteria()
-//                    .andImgEqualTo(item.getImg());
-//
-//            CrawlerJointImg crawlerJointImg = null;
-//            if (null != map.get(url)) {
-//                crawlerJointImg = new CrawlerJointImg();
-//                crawlerJointImg.setImg(map.get(url));
-//                crawlerJointImgService.updateByExampleSelective(crawlerJointImg, crawlerJointImgExample);
-//                continue;
-//            }
-//
-//
-//            String fileName = downloadPicture(url, "D:/fdfsdetail/");
-//            crawlerJointImg = new CrawlerJointImg();
-//            crawlerJointImg.setImg(fileName);
-//            crawlerJointImgService.updateByExampleSelective(crawlerJointImg, crawlerJointImgExample);
-//            map.put(url,fileName);
-//        }
+        CrawlerJointImgExample crawlerJointImgExample = null;
+        crawlerJointImgExample = new CrawlerJointImgExample();
+        List<CrawlerJointImg> jointImgList = crawlerJointImgService.selectByExample(crawlerJointImgExample);
+        Map<String,String> map = new HashMap<>();
+        for (CrawlerJointImg item : jointImgList) {
+            String url = item.getImg();
+            if (null == url || url.equals("null") || url.length() == 0) {
+                continue;
+            }
+
+            crawlerJointImgExample = new CrawlerJointImgExample();
+            crawlerJointImgExample.createCriteria()
+                    .andImgEqualTo(item.getImg());
+
+            CrawlerJointImg crawlerJointImg = null;
+            if (null != map.get(url)) {
+                crawlerJointImg = new CrawlerJointImg();
+                crawlerJointImg.setImg(map.get(url));
+                crawlerJointImgService.updateByExampleSelective(crawlerJointImg, crawlerJointImgExample);
+                continue;
+            }
+
+
+            String fileName = downloadPicture(url, "D:/fdfsdetail/");
+            crawlerJointImg = new CrawlerJointImg();
+            crawlerJointImg.setImg(fileName);
+            crawlerJointImgService.updateByExampleSelective(crawlerJointImg, crawlerJointImgExample);
+            map.put(url,fileName);
+        }
 
         System.out.println("============================完成");
         return thymeleaf("/index");
@@ -236,7 +239,193 @@ public class IndexController extends BaseController {
 
 
     /**
-     * 转换连接
+     * 查询工具
+     *
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/tool", method = RequestMethod.GET)
+    public String tool(HttpServletRequest request,Model model){
+        request.setAttribute("aa","fdsafdsafds");
+        return thymeleaf("/index");
+
+    }
+
+    /**
+     * 查询品牌
+     *
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/tool/pinpai", method = RequestMethod.GET)
+    public String selectPinpai(Model model){
+        List<CrawlerCarBrand> carBrandList = crawlerCarBrandService.selectByExample(new CrawlerCarBrandExample());
+        model.addAttribute("pingpais",carBrandList);
+        return thymeleaf("/tool/pinpai");
+
+    }
+
+    /**
+     * 查询车系
+     *
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/tool/chexi/{pinpaiId}", method = RequestMethod.GET)
+    public String selectChexi(Model model,@PathVariable("pinpaiId") Integer pinpaiId){
+
+        List<CrawlerCarType> carTypeList = null;
+        CrawlerCarBrand carBrand = null;
+        if(pinpaiId!=null){
+            CrawlerCarTypeExample carTypeExample = new CrawlerCarTypeExample();
+            carTypeExample.createCriteria().andCarBrandIdEqualTo(pinpaiId);
+            carTypeList = crawlerCarTypeService.selectByExample(carTypeExample);
+            carBrand = crawlerCarBrandService.selectByPrimaryKey(pinpaiId);
+        }
+        model.addAttribute("pinpai",carBrand);
+        model.addAttribute("chexis",carTypeList);
+        return thymeleaf("/tool/chexi");
+
+    }
+
+    /**
+     * 查询查询年份
+     *
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/tool/year/{chexiId}", method = RequestMethod.GET)
+    public String selectYear(Model model,@PathVariable("chexiId") Integer chexiId){
+
+        List<CrawlerCarDetails> carDetailsList = null;
+        CrawlerCarBrand carBrand = null;
+        CrawlerCarType carType = null;
+        TreeSet<String> years = null;
+        if(chexiId!=null){
+            CrawlerCarDetailsExample carDetailsExample = new CrawlerCarDetailsExample();
+            carDetailsExample.createCriteria().andCarTypeIdEqualTo(chexiId);
+            carDetailsList = crawlerCarDetailsService.selectByExample(carDetailsExample);
+            carType = crawlerCarTypeService.selectByPrimaryKey(chexiId);
+            carBrand = crawlerCarBrandService.selectByPrimaryKey(carType.getCarBrandId());
+            years = new TreeSet<>();
+            for (CrawlerCarDetails item:carDetailsList){
+                years.add(item.getModelYear());
+            }
+
+        }
+        model.addAttribute("pinpai",carBrand);
+        model.addAttribute("chexi",carType);
+        model.addAttribute("years",years);
+        return thymeleaf("/tool/year");
+    }
+
+    /**
+     * 查询查询排量
+     *
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/tool/pailiang", method = RequestMethod.GET)
+    public String pailiang(Model model,Integer chexiId ,String year){
+
+        List<CrawlerCarDetails> carDetailsList = null;
+        CrawlerCarBrand carBrand = null;
+        CrawlerCarType carType = null;
+        Set<String> pailiangs = null;
+        if(chexiId!=null) {
+            CrawlerCarDetailsExample carDetailsExample = new CrawlerCarDetailsExample();
+            carDetailsExample.createCriteria()
+                    .andModelYearEqualTo(year)
+                    .andCarTypeIdEqualTo(chexiId);
+            carDetailsList = crawlerCarDetailsService.selectByExample(carDetailsExample);
+            carType = crawlerCarTypeService.selectByPrimaryKey(chexiId);
+            carBrand = crawlerCarBrandService.selectByPrimaryKey(carType.getCarBrandId());
+            pailiangs = new HashSet<>();
+            for (CrawlerCarDetails item : carDetailsList) {
+                pailiangs.add(item.getDisplacement());
+            }
+
+        }
+        model.addAttribute("pinpai",carBrand);
+        model.addAttribute("chexi",carType);
+        model.addAttribute("year",year);
+        model.addAttribute("pailiangs",pailiangs);
+        return thymeleaf("/tool/pailiang");
+    }
+
+    /**
+     * 查询变速箱类型
+     *
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/tool/bsx", method = RequestMethod.GET)
+    public String bsx(Model model,Integer chexiId ,String year,String pailiang){
+
+        List<CrawlerCarDetails> carDetailsList = null;
+        CrawlerCarBrand carBrand = null;
+        CrawlerCarType carType = null;
+        Set<String> bsxs = null;
+        if(chexiId!=null) {
+            CrawlerCarDetailsExample carDetailsExample = new CrawlerCarDetailsExample();
+            carDetailsExample.createCriteria()
+                    .andCarTypeIdEqualTo(chexiId)
+                    .andModelYearEqualTo(year)
+                    .andDisplacementEqualTo(pailiang);
+            carDetailsList = crawlerCarDetailsService.selectByExample(carDetailsExample);
+            carType = crawlerCarTypeService.selectByPrimaryKey(chexiId);
+            carBrand = crawlerCarBrandService.selectByPrimaryKey(carType.getCarBrandId());
+            bsxs = new HashSet<>();
+            for (CrawlerCarDetails item : carDetailsList) {
+                if(null == item.getGear()){
+                    bsxs.add(item.getTransmission());
+                }else{
+                    bsxs.add(item.getGear()+"挡"+item.getTransmission());
+                }
+
+            }
+
+        }
+        model.addAttribute("pinpai",carBrand);
+        model.addAttribute("chexi",carType);
+        model.addAttribute("year",year);
+        model.addAttribute("pailiang",pailiang);
+        model.addAttribute("bsxs",bsxs);
+        return thymeleaf("/tool/bsx");
+    }
+
+    /**
+     * 查询变速箱类型
+     *
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/tool/result", method = RequestMethod.GET)
+    public String result(Model model,Integer chexiId ,String year,String pailiang,String dangwei,String dtype){
+        CrawlerCarDetails carDetails = null;
+        List<CrawlerJointImg> jointImgList = null;
+        CrawlerJointImgExample jointImgExample = null;
+        CrawlerCarDetailsExample carDetailsExample = new CrawlerCarDetailsExample();
+        carDetailsExample.createCriteria()
+                .andCarTypeIdEqualTo(chexiId)
+                .andModelYearEqualTo(year)
+                .andTransmissionEqualTo(dtype)
+                .andDisplacementEqualTo(pailiang);
+        if(null != dangwei){
+            carDetailsExample.createCriteria().andGearEqualTo(dangwei);
+        }
+        carDetails = crawlerCarDetailsService.selectFirstByExample(carDetailsExample);
+        jointImgExample = new CrawlerJointImgExample();
+        jointImgExample.createCriteria().andCarDetailsIdEqualTo(carDetails.getCarDetailsId());
+        jointImgList = crawlerJointImgService.selectByExample(jointImgExample);
+
+        model.addAttribute("result",carDetails);
+        model.addAttribute("jointImgList",jointImgList);
+        return thymeleaf("/tool/result");
+    }
+
+    /**
+     * 转换连接 品牌
      *
      * @param model
      * @return
@@ -280,20 +469,44 @@ public class IndexController extends BaseController {
     }
 
     /**
-     * 转换连接
+     * 转换连接变速箱接口图片
      *
      * @param model
      * @return
      */
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
-    public String test(Model model) throws FileNotFoundException {
+    @RequestMapping(value = "/changeurlbybsx", method = RequestMethod.GET)
+    public String changeurlbybsx(Model model) throws FileNotFoundException {
 
-        File file = new File("/alidata/xiangshun100/img/aaa.txt");
-        StorePath storePath = fastFileStorageClient.uploadFile(null, new FileInputStream(file), file.length(), "txt");
-        System.out.println(storePath.getPath());
-        System.out.println(storePath.getFullPath());
-        System.out.println(storePath.getGroup());
+        CrawlerJointImgExample jointImgExample = null;
+        List<CrawlerJointImg> jointImgList = crawlerJointImgService.selectByExample(new CrawlerJointImgExample());
+        Map<String,String> map = new HashMap<>();
+        for (CrawlerJointImg item : jointImgList) {
+            String url = item.getImg();
+            if (null == url || url.equals("null") || url.length() == 0) {
+                continue;
+            }
 
+            jointImgExample = new CrawlerJointImgExample();
+            jointImgExample.createCriteria()
+                    .andImgEqualTo(item.getImg());
+
+            CrawlerJointImg crawlerJointImg = null;
+            if (null != map.get(url)) {
+                crawlerJointImg = new CrawlerJointImg();
+                crawlerJointImg.setImg(map.get(url));
+                crawlerJointImgService.updateByExampleSelective(crawlerJointImg, jointImgExample);
+                continue;
+            }
+
+            File file = new File("/alidata/xiangshun100/img/fdfsdetail/"+item.getImg());
+            StorePath storePath = fastFileStorageClient.uploadFile(null, new FileInputStream(file), file.length(), "jpg");
+            crawlerJointImg = new CrawlerJointImg();
+            crawlerJointImg.setImg("http://image.xiangshun100.com/"+storePath.getFullPath());
+            crawlerJointImgService.updateByExampleSelective(crawlerJointImg, jointImgExample);
+            map.put(url,storePath.getPath());
+        }
+
+        System.out.println("============================完成");
         return thymeleaf("/index");
     }
 
@@ -623,8 +836,9 @@ public class IndexController extends BaseController {
                 Elements imgs = doc.select(".result-pic-item");
                 if (null != imgs & imgs.size() > 0) {
                     jointImgList = new ArrayList<>();
-                    CrawlerJointImg jointImg = new CrawlerJointImg();
+                    CrawlerJointImg jointImg = null;
                     for (Element item : imgs) {
+                        jointImg = new CrawlerJointImg();
                         String name = item.select(".text-content").text();
                         String img = item.attr("s");
                         jointImg.setName(name);
@@ -639,8 +853,9 @@ public class IndexController extends BaseController {
 
                 if (null != products & products.size() > 0) {
                     productList = new ArrayList<>();
-                    CrawlerProduct product = new CrawlerProduct();
+                    CrawlerProduct product = null;
                     for (Element item : products) {
+                        product = new CrawlerProduct();
                         String name = item.select(".name").text();
                         String price = item.select(".price1").text();
                         String img = item.select("image").attr("src");
