@@ -60,7 +60,7 @@ public class IndexController extends BaseController {
     @Autowired
     FastFileStorageClient fastFileStorageClient;
 
-    private static String coodies = "48nlj6k2nil2nkuh72qckdk1g1";
+    private static String coodies = "43hva1mjjc3t5vdkbieoghsq70";
 
 
 
@@ -792,7 +792,7 @@ public class IndexController extends BaseController {
 
                 cookiesMap.put("PHPSESSID", coodies);
                 doc = Jsoup.connect("http://vin.wglubricants.com/Home/SK/result")
-                        .header("User-Agent", "Mozilla/5.0 (Linux; Android 8.1.0; Nexus 5X Build/OPM1.171019.011; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/61.0.3163.98 Mobile Safari/537.36 MicroMessenger/6.5.13.1100 NetType/WIFI Language/zh_CN")
+                        .header("User-Agent", "Mozilla/5.0 (Linux; Android 7.0; STF-AL10 Build/HUAWEISTF-AL10; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/57.0.2987.132 MQQBrowser/6.2 TBS/043807 Mobile Safari/537.36 MicroMessenger/6.6.1.1220(0x26060135) NetType/WIFI Language/zh_CN")
                         .cookies(cookiesMap)
                         .data(param)
                         .timeout(50000).post();
